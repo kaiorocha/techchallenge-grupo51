@@ -54,13 +54,10 @@ with tab0:
     ## Tab Geral
     '''
     #DataFrame
-    plt.figure(figsize=(12, 6))
+    fig = plt.figure(figsize=(12, 6))
     axis = sns.barplot(data=vendas_por_continente, x="Continente", y="Total")
     axis.yaxis.set_major_formatter(ticker.StrMethodFormatter("U$ {x} mi"))
     #plt.ylim(0,2500000)
-    plt.xticks()
-
-    fig = plt.subplots();
 
     st.pyplot(fig, use_container_width=True)
 
