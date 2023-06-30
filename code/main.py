@@ -6,7 +6,7 @@ import seaborn as sns
 
 import streamlit as st
 
-dados = pd.read_csv("../dataFiles/ExpVinho.csv", sep=";", encoding="utf-8", thousands=".")
+dados = pd.read_csv("ExpVinho.csv", sep=";", encoding="utf-8", thousands=".")
 
 tab0 = st.tabs("Geral")
 
