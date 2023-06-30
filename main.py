@@ -8,7 +8,7 @@ import streamlit as st
 
 dados = pd.read_csv("ExpVinho.csv", sep=";", encoding="utf-8", thousands=".")
 
-tab0 = st.tabs("Geral")
+tab0, tab1, tab2 = st.tabs(["Geral", "Sub Tab 1", "Sub Tab 2"])
 
 col_pais = dados[["País"]]
 
@@ -51,8 +51,9 @@ vendas_por_continente = vendas_por_continente.reset_index()
 
 with tab0:
     '''
-    TAB Geral
+    ## Tab Geral
     '''
+    #DataFrame
     plt.figure(figsize=(12, 6))
     axis = sns.barplot(data=vendas_por_continente, x="Continente", y="Total")
     axis.yaxis.set_major_formatter(ticker.StrMethodFormatter("U$ {x} mi"))
@@ -63,3 +64,13 @@ with tab0:
     #df = pd.DataFrame(dados)
     #st.dataframe(df, use_container_width=True)
     #st.pyplot(sns.pairplot(dados, hue = "classe"))
+
+with tab1:
+    '''
+    ## Sub Tab 1
+    '''
+
+with tab2:
+    '''
+    ## Sub Tab 2
+    '''
