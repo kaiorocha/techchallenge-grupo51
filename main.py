@@ -87,7 +87,7 @@ with tab0:
     # Ajustando os ticks do eixo y para o formato em milhões
     fig2.update_yaxes(tickprefix="U$ ", ticksuffix=" Mi")
 
-    st.pyplot(fig2, use_container_width=True)
+    st.plotly_chart(fig2, use_container_width=True)
 
 with tab1:
     '''
