@@ -9,7 +9,7 @@ import streamlit as st
 
 dados = pd.read_csv("ExpVinho.csv", sep=";", encoding="utf-8", thousands=".")
 
-tab0, tab1, tab2 = st.tabs(["Continente", "Países"])
+tab0, tab1 = st.tabs(["Continente", "Países"])
 
 col_pais = dados[["País"]]
 
