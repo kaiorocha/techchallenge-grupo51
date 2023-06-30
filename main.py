@@ -3,12 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import seaborn as sns
+import plotly.express as px
 
 import streamlit as st
 
 dados = pd.read_csv("ExpVinho.csv", sep=";", encoding="utf-8", thousands=".")
 
-tab0, tab1, tab2 = st.tabs(["Geral", "Sub Tab 1", "Sub Tab 2"])
+tab0, tab1, tab2 = st.tabs(["Continente", "Países"])
 
 col_pais = dados[["País"]]
 
@@ -49,25 +50,46 @@ vendas_por_continente = vendas_por_continente.sort_values("Total", ascending=Fal
 vendas_por_continente = (vendas_por_continente / 1e6).round(1)
 vendas_por_continente = vendas_por_continente.reset_index()
 
+dados_dolar_anual = dados_dolar_combinado.copy()
+cols = dados_dolar_anual.columns.str.replace("-Dolar","")
+dados_dolar_anual.columns = cols
+dados_dolar_anual = dados_dolar_anual.melt(id_vars = "Continente", value_vars=dados_dolar_anual.columns[1:16], var_name="Ano", value_name="Vendas_Dolar")
+
+# Criando uma tabela cruzada (crosstab) com os valores de venda por ano por continente
+vendas_por_ano = pd.crosstab(index = dados_dolar_anual.Ano, columns = dados_dolar_anual.Continente,
+                             values = dados_dolar_anual.Vendas_Dolar, aggfunc="sum")
+
+vendas_por_ano = vendas_por_ano / 1e6
+
 with tab0:
     '''
     ## Tab Geral
     '''
     #DataFrame
-    fig = plt.figure(figsize=(12, 6))
+    fig1 = plt.figure(figsize=(12, 6))
     axis = sns.barplot(data=vendas_por_continente, x="Continente", y="Total")
     axis.yaxis.set_major_formatter(ticker.StrMethodFormatter("U$ {x} mi"))
     #plt.ylim(0,2500000)
     plt.xticks()
 
-    st.pyplot(fig, use_container_width=True)
+    st.pyplot(fig1, use_container_width=True)
+
+    # Gerando um gráfico de linha com o faturamento da loja por trimestre dividido por região
+    fig2 = px.line(vendas_por_ano, x=vendas_por_ano.index, y=vendas_por_ano.columns)
+
+    # Ajustando o layout do gráfico
+    fig2.update_layout(width=1300, height=600, font_family='DejaVu Sans', font_size=15,
+                      font_color="grey", title_font_color="black", title_font_size=24,
+                      title_text='Vendas de vinho por continente' +
+                                 '<br><sup size=1 style="color:#555655">De 2007 a 2021</sup>',
+                      xaxis_title='', yaxis_title='', plot_bgcolor="white")
+
+    # Ajustando os ticks do eixo y para o formato em milhões
+    fig2.update_yaxes(tickprefix="U$ ", ticksuffix=" Mi")
+
+    st.pyplot(fig2, use_container_width=True)
 
 with tab1:
     '''
     ## Sub Tab 1
-    '''
-
-with tab2:
-    '''
-    ## Sub Tab 2
     '''
