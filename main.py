@@ -53,14 +53,13 @@ with tab0:
     '''
     TAB Geral
     '''
+    plt.figure(figsize=(12, 6))
+    axis = sns.barplot(data=vendas_por_continente, x="Continente", y="Total")
+    axis.yaxis.set_major_formatter(ticker.StrMethodFormatter("U$ {x} mi"))
+    #plt.ylim(0,2500000)
+    plt.xticks()
+    plt.show()
 
-    #plt.figure(figsize=(12, 6))
-    #axis = sns.barplot(data=vendas_por_continente, x="Continente", y="Total")
-    #axis.yaxis.set_major_formatter(ticker.StrMethodFormatter("U$ {x} mi"))
-    # plt.ylim(0,2500000)
-    #plt.xticks()
-    #plt.show()
-
-    df = pd.DataFrame(dados)
-    st.dataframe(df, use_container_width=True)
-    st.pyplot(sns.pairplot(dados, hue = "classe"))
+    #df = pd.DataFrame(dados)
+    #st.dataframe(df, use_container_width=True)
+    #st.pyplot(sns.pairplot(dados, hue = "classe"))
