@@ -58,6 +58,7 @@ with tab0:
     axis = sns.barplot(data=vendas_por_continente, x="Continente", y="Total")
     axis.yaxis.set_major_formatter(ticker.StrMethodFormatter("U$ {x} mi"))
     #plt.ylim(0,2500000)
+    plt.xticks()
 
     st.pyplot(fig, use_container_width=True)
 
