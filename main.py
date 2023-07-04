@@ -76,6 +76,13 @@ vendas_por_ano = vendas_por_ano / 1e6
 total_dolar_ano = dados_dolar.drop("Total", axis = 1).set_index("País").T
 total_dolar_ano["Total"] = total_dolar_ano.loc[:].sum(axis = 1)
 
+dados_dolar_ordenados = dados_dolar_combinado.sort_values("Total", axis= 0 , ascending= False)
+
+dados_dolar_anual_total = dados_dolar_combinado.copy()
+dados_dolar_anual_total.columns = dados_dolar_anual_total.columns.str.replace("-Dolar","")
+export_por_ano = dados_dolar_anual_total.iloc[:,1:-2].sum().to_frame().rename(columns={0: "Total"})
+export_por_ano["Total"] = (export_por_ano["Total"] / 1e6).round(2)
+
 with tab0:
     '''
     ## Tab Geral
@@ -86,6 +93,25 @@ with tab0:
     plt.title("Exportação de vinhos no período de 2007 á 2021")
 
     st.pyplot(fig0, use_container_width=True)
+
+    # Definindo a área do gráfico e o tema da visualização
+    fig, ax = plt.subplots(figsize=(14, 6))
+
+    # Desenhando o gráfico
+    ax.plot(export_por_ano.index, export_por_ano["Total"], marker="o")
+
+    # Personalizando o gráfico
+    ax.set_title('Exportação de Vinhos em milhões de dolares (U$ mi) (2007 - 2021)',
+                 loc='left', fontsize=18, color=CINZA1, pad=40)
+    ax.set_xlabel("")
+    ax.set_ylabel("")
+    ax.xaxis.set_tick_params(labelsize=14, labelcolor=CINZA2)
+    ax.yaxis.set_major_formatter(ticker.StrMethodFormatter("U$ {x} mi"))
+    ax.grid(axis="y", linestyle="--", lw=1)
+    ax.set_ylim(0, 25)
+    sns.despine(left=True, bottom=True)
+
+    st.pyplot(fig, use_container_width=True)
 
 with tab1:
     '''
@@ -104,14 +130,16 @@ with tab1:
     fig2 = px.line(vendas_por_ano, x=vendas_por_ano.index, y=vendas_por_ano.columns)
 
     # Ajustando o layout do gráfico
-    fig2.update_layout(width=1300, height=600, font_family='DejaVu Sans', font_size=15,
+    fig2.update_layout(width=1000, height=600, font_family='DejaVu Sans', font_size=15,
                       font_color="grey", title_font_color="black", title_font_size=24,
                       title_text='Vendas de vinho por continente' +
                                  '<br><sup size=1 style="color:#555655">De 2007 a 2021</sup>',
-                      xaxis_title='', yaxis_title='', plot_bgcolor="white")
+                      xaxis_title='', yaxis_title='', plot_bgcolor="#f8f9fa")
 
     # Ajustando os ticks do eixo y para o formato em milhões
     fig2.update_yaxes(tickprefix="U$ ", ticksuffix=" Mi")
+
+    fig2.update_xaxes(tickmode='array', tickvals=np.arange(2007, 2022, 2))
 
     st.plotly_chart(fig2, use_container_width=True)
 
@@ -120,3 +148,10 @@ with tab1:
     '''
     ## Sub Tab 1
     '''
+    fig0 = plt.figure(figsize=(14, 8))
+    ax = sns.barplot(data=dados_dolar_ordenados.head(10), y="País", x="Total")
+    plt.title("Top 10 Países que mais importam vinhos do Brasil")
+    plt.xlabel("Total em milhões de US$")
+    ax.xaxis.set_major_formatter(ticker.StrMethodFormatter("{x:,.2f}"))
+
+    st.pyplot(fig0, use_container_width=True)
