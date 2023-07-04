@@ -144,7 +144,7 @@ with tab1:
     st.plotly_chart(fig2, use_container_width=True)
 
 
-with tab1:
+with tab2:
     '''
     ## Sub Tab 1
     '''
