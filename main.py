@@ -7,9 +7,21 @@ import plotly.express as px
 
 import streamlit as st
 
+## Paleta 01 - 5 cores
+RED1, GREEN1, GREEN2, YELLOW1, RED2 = "#EE6055", "#60D394", "#AAF683", "#FFD97D", "#FF9B85"
+PALETA01 = [RED1, GREEN1, GREEN2, YELLOW1, RED2]
+
+## Paleta 02 - 10 cores
+VINHO1, VINHO2, VINHO3, VINHO4, VINHO5 =  "#590D22", "#800F2F", "#A4133C", "#C9184A", "#FF4D6D"
+VINHO6, VINHO7, VINHO8, VINHO9, VINHO10 = "#FF758F", "#FF758F", "#FF758F", "#FF758F", "#FF758F"
+PALETA02 = [VINHO1, VINHO2, VINHO3, VINHO4, VINHO5, VINHO6, VINHO7, VINHO8, VINHO9, VINHO10]
+
+## Paleta 03 - Títulos
+CINZA1, CINZA2, CINZA3, CINZA4, CINZA5 = '#212529', '#495057', '#adb5bd', '#dee2e6', '#f8f9fa'
+
 dados = pd.read_csv("ExpVinho.csv", sep=";", encoding="utf-8", thousands=".")
 
-tab0, tab1 = st.tabs(["Continente", "Países"])
+tab0, tab1, tab2 = st.tabs(["Exportação de vinhos", "Exportação por continente", "Exportação por países"])
 
 col_pais = dados[["País"]]
 
@@ -61,7 +73,21 @@ vendas_por_ano = pd.crosstab(index = dados_dolar_anual.Ano, columns = dados_dola
 
 vendas_por_ano = vendas_por_ano / 1e6
 
+total_dolar_ano = dados_dolar.drop("Total", axis = 1).set_index("País").T
+total_dolar_ano["Total"] = total_dolar_ano.loc[:].sum(axis = 1)
+
 with tab0:
+    '''
+    ## Tab Geral
+    '''
+    fig0 = plt.figure(figsize=(20, 10))
+    axis = sns.lineplot(data=total_dolar_ano, x=total_dolar_ano.index, y="Total")
+    axis.yaxis.set_major_formatter(ticker.StrMethodFormatter("U$ {x} mi"))
+    plt.title("Exportação de vinhos no período de 2007 á 2021")
+
+    st.pyplot(fig0, use_container_width=True)
+
+with tab1:
     '''
     ## Tab Geral
     '''
@@ -88,6 +114,7 @@ with tab0:
     fig2.update_yaxes(tickprefix="U$ ", ticksuffix=" Mi")
 
     st.plotly_chart(fig2, use_container_width=True)
+
 
 with tab1:
     '''
